@@ -1,0 +1,512 @@
+{
+  "magic": {
+    "lagu": "zun",
+    "pos": "",
+    "image": "",
+    "audio": ""
+  },
+  "world": {
+    "lagu": "mivora",
+    "pos": "noun",
+    "image": "",
+    "audio": ""
+  },
+  "friend": {
+    "lagu": "glenth",
+    "pos": "noun",
+    "image": "",
+    "audio": ""
+  },
+  "water": {
+    "lagu": "uah",
+    "pos": "",
+    "image": "",
+    "audio": ""
+  },
+  "coffee": {
+    "lagu": "aldinn",
+    "pos": "noun",
+    "image": "",
+    "audio": ""
+  },
+  "yes": {
+    "lagu": "yor",
+    "pos": "",
+    "image": "",
+    "audio": ""
+  },
+  "no": {
+    "lagu": "nu",
+    "pos": "",
+    "image": "",
+    "audio": ""
+  },
+  "fire": {
+    "lagu": "reha",
+    "pos": "",
+    "image": "",
+    "audio": ""
+  },
+  "thank": {
+    "lagu": "bayn",
+    "pos": "",
+    "image": "",
+    "audio": ""
+  },
+  "you": {
+    "lagu": "shu",
+    "pos": "",
+    "image": "",
+    "audio": ""
+  },
+  "i": {
+    "lagu": "nie",
+    "pos": "",
+    "image": "",
+    "audio": ""
+  },
+  "need": {
+    "lagu": "unn",
+    "pos": "",
+    "image": "",
+    "audio": ""
+  },
+  "is": {
+    "lagu": "tayb",
+    "pos": "",
+    "image": "",
+    "audio": ""
+  },
+  "cast": {
+    "lagu": "en",
+    "pos": "",
+    "image": "",
+    "audio": ""
+  },
+  "fuck": {
+    "lagu": "furukoi",
+    "pos": "",
+    "image": "",
+    "audio": ""
+  },
+  "me": {
+    "lagu": "ah",
+    "pos": "",
+    "image": "",
+    "audio": ""
+  },
+  "spear": {
+    "lagu": "unga",
+    "pos": "",
+    "image": "",
+    "audio": ""
+  },
+  "sword": {
+    "lagu": "avia",
+    "pos": "",
+    "image": "",
+    "audio": ""
+  },
+  "kunai": {
+    "lagu": "petra",
+    "pos": "",
+    "image": "",
+    "audio": ""
+  },
+  "don't": {
+    "lagu": "doy",
+    "pos": "",
+    "image": "",
+    "audio": ""
+  },
+  "for": {
+    "lagu": "ankh",
+    "pos": "",
+    "image": "",
+    "audio": ""
+  },
+  "bastard": {
+    "lagu": "aruku",
+    "pos": "",
+    "image": "",
+    "audio": ""
+  },
+  "drink": {
+    "lagu": "gru",
+    "pos": "",
+    "image": "",
+    "audio": ""
+  },
+  "twat": {
+    "lagu": "twaya",
+    "pos": "",
+    "image": "",
+    "audio": ""
+  },
+  "waffle": {
+    "lagu": "fe",
+    "pos": "",
+    "image": "",
+    "audio": ""
+  },
+  "eat": {
+    "lagu": "ena",
+    "pos": "",
+    "image": "",
+    "audio": ""
+  },
+  "pancake": {
+    "lagu": "aif",
+    "pos": "",
+    "image": "",
+    "audio": ""
+  },
+  "bull": {
+    "lagu": "bal",
+    "pos": "",
+    "image": "",
+    "audio": ""
+  },
+  "shit": {
+    "lagu": "tish",
+    "pos": "",
+    "image": "",
+    "audio": ""
+  },
+  "weed": {
+    "lagu": "blu",
+    "pos": "",
+    "image": "",
+    "audio": ""
+  },
+  "something": {
+    "lagu": "bow",
+    "pos": "",
+    "image": "",
+    "audio": ""
+  },
+  "we": {
+    "lagu": "nuk",
+    "pos": "",
+    "image": "",
+    "audio": ""
+  },
+  "want": {
+    "lagu": "zan",
+    "pos": "",
+    "image": "",
+    "audio": ""
+  },
+  "food": {
+    "lagu": "sun",
+    "pos": "",
+    "image": "",
+    "audio": ""
+  },
+  "god": {
+    "lagu": "yawey",
+    "pos": "",
+    "image": "",
+    "audio": ""
+  },
+  "angel": {
+    "lagu": "rin'g",
+    "pos": "",
+    "image": "",
+    "audio": ""
+  },
+  "demon": {
+    "lagu": "morganstern",
+    "pos": "",
+    "image": "",
+    "audio": ""
+  },
+  "hell": {
+    "lagu": "ll",
+    "pos": "",
+    "image": "",
+    "audio": ""
+  },
+  "heaven": {
+    "lagu": "ven",
+    "pos": "",
+    "image": "",
+    "audio": ""
+  },
+  "light": {
+    "lagu": "kumos",
+    "pos": "",
+    "image": "",
+    "audio": ""
+  },
+  "dark": {
+    "lagu": "nox",
+    "pos": "",
+    "image": "",
+    "audio": ""
+  },
+  "man": {
+    "lagu": "munn",
+    "pos": "",
+    "image": "",
+    "audio": ""
+  },
+  "woman": {
+    "lagu": "munu",
+    "pos": "",
+    "image": "",
+    "audio": ""
+  },
+  "know": {
+    "lagu": "nia",
+    "pos": "",
+    "image": "",
+    "audio": ""
+  },
+  "of": {
+    "lagu": "de",
+    "pos": "",
+    "image": "",
+    "audio": ""
+  },
+  "your": {
+    "lagu": "shuru",
+    "pos": "",
+    "image": "",
+    "audio": ""
+  },
+  "him": {
+    "lagu": "uta",
+    "pos": "",
+    "image": "",
+    "audio": ""
+  },
+  "his": {
+    "lagu": "utas",
+    "pos": "",
+    "image": "",
+    "audio": ""
+  },
+  "her": {
+    "lagu": "ana",
+    "pos": "",
+    "image": "",
+    "audio": ""
+  },
+  "hers": {
+    "lagu": "anas",
+    "pos": "",
+    "image": "",
+    "audio": ""
+  },
+  "they": {
+    "lagu": "tes",
+    "pos": "",
+    "image": "",
+    "audio": ""
+  },
+  "theirs": {
+    "lagu": "tesa",
+    "pos": "",
+    "image": "",
+    "audio": ""
+  },
+  "them": {
+    "lagu": "tam",
+    "pos": "",
+    "image": "",
+    "audio": ""
+  },
+  "are": {
+    "lagu": "re",
+    "pos": "",
+    "image": "",
+    "audio": ""
+  },
+  "get": {
+    "lagu": "sta",
+    "pos": "",
+    "image": "",
+    "audio": ""
+  },
+  "night": {
+    "lagu": "na",
+    "pos": "",
+    "image": "",
+    "audio": ""
+  },
+  "day": {
+    "lagu": "sol",
+    "pos": "",
+    "image": "",
+    "audio": ""
+  },
+  "human": {
+    "lagu": "hamunn",
+    "pos": "",
+    "image": "",
+    "audio": ""
+  },
+  "fear": {
+    "lagu": "pa",
+    "pos": "",
+    "image": "",
+    "audio": ""
+  },
+  "not": {
+    "lagu": "ot",
+    "pos": "",
+    "image": "",
+    "audio": ""
+  },
+  "it": {
+    "lagu": "ars",
+    "pos": "",
+    "image": "",
+    "audio": ""
+  },
+  "to": {
+    "lagu": "tah",
+    "pos": "",
+    "image": "",
+    "audio": ""
+  },
+  "too": {
+    "lagu": "el",
+    "pos": "",
+    "image": "",
+    "audio": ""
+  },
+  "retard": {
+    "lagu": "runar",
+    "pos": "",
+    "image": "",
+    "audio": ""
+  },
+  "moon": {
+    "lagu": "luna",
+    "pos": "",
+    "image": "",
+    "audio": ""
+  },
+  "quiet": {
+    "lagu": "sen",
+    "pos": "",
+    "image": "",
+    "audio": ""
+  },
+  "ball": {
+    "lagu": "baru",
+    "pos": "",
+    "image": "",
+    "audio": ""
+  },
+  "see": {
+    "lagu": "sar",
+    "pos": "",
+    "image": "",
+    "audio": ""
+  },
+  "language": {
+    "lagu": "lagu",
+    "pos": "",
+    "image": "",
+    "audio": ""
+  },
+  "a": {
+    "lagu": "agh",
+    "pos": "",
+    "image": "",
+    "audio": ""
+  },
+  "bitch": {
+    "lagu": "bit",
+    "pos": "",
+    "image": "",
+    "audio": ""
+  },
+  "wolf": {
+    "lagu": "lupe",
+    "pos": "",
+    "image": "",
+    "audio": ""
+  },
+  "fox": {
+    "lagu": "fo",
+    "pos": "",
+    "image": "",
+    "audio": ""
+  },
+  "bunny": {
+    "lagu": "ooni",
+    "pos": "",
+    "image": "",
+    "audio": ""
+  },
+  "welcome": {
+    "lagu": "therwi",
+    "pos": "",
+    "image": "",
+    "audio": ""
+  },
+  "good": {
+    "lagu": "tch",
+    "pos": "",
+    "image": "",
+    "audio": ""
+  },
+  "hand": {
+    "lagu": "imar",
+    "pos": "",
+    "image": "",
+    "audio": ""
+  },
+  "heal": {
+    "lagu": "roga",
+    "pos": "",
+    "image": "",
+    "audio": ""
+  },
+  "summon": {
+    "lagu": "umon",
+    "pos": "",
+    "image": "",
+    "audio": ""
+  },
+  "angry": {
+    "lagu": "fio",
+    "pos": "",
+    "image": "",
+    "audio": ""
+  },
+  "speed": {
+    "lagu": "spu",
+    "pos": "",
+    "image": "",
+    "audio": ""
+  },
+  "meat": {
+    "lagu": "con",
+    "pos": "",
+    "image": "",
+    "audio": ""
+  },
+  "shield": {
+    "lagu": "der",
+    "pos": "",
+    "image": "",
+    "audio": ""
+  },
+  "orb": {
+    "lagu": "burra",
+    "pos": "",
+    "image": "",
+    "audio": ""
+  },
+  "fat": {
+    "lagu": "taffa",
+    "pos": "",
+    "image": "",
+    "audio": ""
+  }
+}
