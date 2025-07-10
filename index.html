@@ -1,677 +1,340 @@
 <!DOCTYPE html>
-
 <html lang="en">
-
 <head>
-
     <meta charset="UTF-8">
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>Auto CSV Sentence Translator</title>
-
     <script src="https://cdn.tailwindcss.com"></script>
-
     <style>
-
         .gradient-bg {
-
             background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-
         }
-
         .translation-card {
-
             backdrop-filter: blur(10px);
-
             background: rgba(255, 255, 255, 0.8);
-
             box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
-
         }
-
         .loader {
-
             width: 48px;
-
             height: 48px;
-
             border: 5px solid #3b82f6;
-
             border-bottom-color: transparent;
-
             border-radius: 50%;
-
             display: inline-block;
-
             box-sizing: border-box;
-
             animation: rotation 1s linear infinite;
-
         }
-
         @keyframes rotation {
-
             0% { transform: rotate(0deg); }
-
             100% { transform: rotate(360deg); }
-
         }
-
         .language-badge {
-
             display: inline-flex;
-
             align-items: center;
-
             justify-content: center;
-
             padding: 0.25rem 0.5rem;
-
             border-radius: 9999px;
-
             font-size: 0.75rem;
-
             line-height: 1rem;
-
             font-weight: 500;
-
         }
-
 
         /* Dark Mode Styles */
-
         body.dark-mode {
-
             background: linear-gradient(135deg, #2d3748 0%, #1a202c 100%);
-
             color: #e2e8f0;
-
         }
-
         body.dark-mode .translation-card {
-
             background: rgba(45, 55, 72, 0.8);
-
             box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
-
             color: #e2e8f0;
-
         }
-
         body.dark-mode .text-gray-800 {
-
             color: #e2e8f0;
-
         }
-
         body.dark-mode .text-gray-600 {
-
             color: #cbd5e0;
-
         }
-
         body.dark-mode .text-gray-700 {
-
             color: #cbd5e0;
-
         }
-
         body.dark-mode .border-gray-300 {
-
             border-color: #4a5568;
-
         }
-
         body.dark-mode .bg-gray-100 {
-
             background-color: #4a5568;
-
         }
-
         body.dark-mode .text-gray-500 {
-
             color: #a0aec0;
-
         }
-
         body.dark-mode .bg-white {
-
             background-color: #2d3748;
-
         }
-
         body.dark-mode .bg-white.bg-opacity-50 {
-
             background-color: rgba(45, 55, 72, 0.5);
-
         }
-
         /* Input field specific dark mode styles */
-
         body.dark-mode input[type="text"],
-
         body.dark-mode input[type="file"] {
-
             background-color: #4a5568;
-
             color: #e2e8f0;
-
             border-color: #6b7280;
-
         }
-
         body.dark-mode input::placeholder {
-
             color: #a0aec0;
-
         }
-
         body.dark-mode .file\:bg-blue-50 {
-
             background-color: #3b82f6; /* A darker blue for file input button */
-
             color: #e2e8f0;
-
         }
-
         body.dark-mode .file\:text-blue-700 {
-
             color: #e2e8f0;
-
         }
-
         body.dark-mode .hover\:file\:bg-blue-100:hover {
-
             background-color: #2563eb; /* Darker hover state */
-
         }
-
     </style>
-
 </head>
-
 <body class="gradient-bg min-h-screen p-4 md:p-8">
-
     <div class="max-w-4xl mx-auto">
-
         <div class="flex justify-between items-center mb-8">
-
             <h1 class="text-3xl md:text-4xl font-bold text-gray-800">
-
                 Auto CSV Sentence Translator
-
             </h1>
-
             <!-- Dark/Light Mode Toggle Button -->
-
             <button
-
                 id="theme-toggle"
-
                 class="bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 px-4 py-2 rounded-md transition-colors"
-
                 onclick="toggleTheme()"
-
             >
-
                 Toggle Theme
-
             </button>
-
         </div>
-
         <p class="text-gray-600 text-center mb-8">
-
             Automatically translates sentences using a local CSV dictionary.
-
         </p>
 
-
         <div class="translation-card rounded-xl p-6 mb-8">
-
             <h2 class="text-xl font-semibold text-gray-800 mb-4">Translate a Sentence</h2>
-
             <div class="flex flex-col md:flex-row gap-4 mb-4">
-
                 <div class="flex-1">
-
                     <input
-
                         type="text"
-
                         id="sentence-input"
-
                         placeholder="Enter sentence to translate..."
-
                         class="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-
                     />
-
                 </div>
-
                 <button
-
                     onclick="translateSentence()"
-
                     class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-md transition-colors"
-
                 >
-
                     Translate
-
                 </button>
-
             </div>
-
 
             <div id="translation-result" class="hidden mt-6">
-
                 <h3 class="text-lg font-medium text-gray-800 mb-2">Translation Result</h3>
-
                 <div class="flex flex-col gap-3">
-
                     <div class="flex items-start gap-3">
-
                         <span class="language-badge bg-blue-100 text-blue-800">Original</span>
-
                         <p id="original-sentence" class="text-gray-700"></p>
-
                     </div>
-
                     <div class="flex items-start gap-3">
-
                         <span class="language-badge bg-purple-100 text-purple-800">Translated</span>
-
                         <p id="translated-sentence" class="text-gray-700"></p>
-
                     </div>
-
                 </div>
-
             </div>
-
         </div>
-
 
         <div id="loading-indicator" class="hidden text-center py-4">
-
             <div class="loader mx-auto"></div>
-
             <p class="mt-2 text-gray-600">Loading translation dictionary...</p>
-
         </div>
-
 
         <!-- Translation History remains -->
-
         <div class="translation-card rounded-xl p-6 mb-8" id="translation-history">
-
             <h2 class="text-xl font-semibold text-gray-800 mb-4">Translation History</h2>
-
             <div id="history-list" class="space-y-2">
-
                 <!-- Will be populated by JS -->
-
             </div>
-
         </div>
-
     </div>
 
-
     <script>
-
         let translationsData = {};
-
         let translationMemory = []; // Stores past translations
-
         
-
         // DOM elements (removed unused ones)
-
         const loadingIndicator = document.getElementById('loading-indicator'); // Still needed for initial load feedback
-
         const errorMessage = document.getElementById('error-message');
-
         const sentenceInput = document.getElementById('sentence-input');
-
         const translationResult = document.getElementById('translation-result');
-
         const originalSentenceEl = document.getElementById('original-sentence');
-
         const translatedSentenceEl = document.getElementById('translated-sentence');
 
-
         // Function to toggle dark/light theme
-
         function toggleTheme() {
-
             document.body.classList.toggle('dark-mode');
-
             // Optionally, save user preference to localStorage
-
             if (document.body.classList.contains('dark-mode')) {
-
                 localStorage.setItem('theme', 'dark');
-
             } else {
-
                 localStorage.setItem('theme', 'light');
-
             }
-
         }
-
 
         // Load CSV from URL (now only for the default 'translator.csv')
-
         async function loadCSV() {
-
             errorMessage.classList.add('hidden');
-
+            loadingIndicator.classList.remove('hidden');
+            
             try {
-
-                // Try loading from multiple possible locations
-
-                const paths = ['translator.csv', './translator.csv', 'data/translator.csv'];
-
-                
-
-                for (const path of paths) {
-
-                    try {
-
-                        const response = await fetch(path);
-
-                        if (response.ok) {
-
-                            const csvText = await response.text();
-
-                            processCSV(csvText);
-
-                            return; // Exit if successful
-
-                        }
-
-                    } catch (e) {
-
-                        // Try next path
-
-                        continue;
-
+                const response = await fetch('translator.csv');
+                if (!response.ok) {
+                    // Try alternative paths if first attempt fails
+                    const response = await fetch('./translator.csv');
+                    if (!response.ok) {
+                        throw new Error("Failed to load translator.csv");
                     }
-
                 }
-
-                throw new Error('Could not find translator.csv in any standard location');
-
+                
+                const csvText = await response.text();
+                processCSV(csvText);
             } catch (error) {
-
-                showError(`Failed to load CSV: ${error.message}`);
-
+                showError(`Failed to load CSV: ${error.message}. Make sure translator.csv exists in this folder.`);
+            } finally {
+                loadingIndicator.classList.add('hidden');
             }
-
         }
-
 
         // Process CSV data
-
         function processCSV(csvText) {
-
             try {
-
                 // Parse CSV (assuming header row exists)
-
                 const lines = csvText.split('\n');
-
                 const headers = lines[0].split(',');
-
                 
-
                 // Find index of relevant columns (source and target language)
-
                 const sourceIndex = headers.findIndex(h => h.toLowerCase().includes('english') || h.toLowerCase().includes('source'));
-
                 const targetIndex = headers.findIndex(h => h.toLowerCase().includes('lagu') || h.toLowerCase().includes('target'));
-
                 
-
                 if (sourceIndex === -1 || targetIndex === -1) {
-
                     throw new Error('Could not find required columns (English/Source and Lagu/Target) in translator.csv');
-
                 }
-
                 
-
                 // Create translation dictionary
-
                 translationsData = {};
-
                 for (let i = 1; i < lines.length; i++) {
-
                     if (!lines[i].trim()) continue;
-
                     
-
                     const cells = lines[i].split(',');
-
                     if (cells.length > Math.max(sourceIndex, targetIndex)) {
-
                         const source = cells[sourceIndex].trim().toLowerCase();
-
                         const target = cells[targetIndex].trim().toLowerCase();
-
                         translationsData[source] = target;
-
                     }
-
                 }
-
                 
-
                 // No longer displaying CSV content, so no need for displayCSVContent or downloadBtn
-
                 
-
             } catch (error) {
-
                 showError(`Error processing CSV: ${error.message}`);
-
             }
-
         }
-
 
         // Translate sentence using loaded dictionary
-
         function translateSentence() {
-
             const sentence = sentenceInput.value.trim();
-
             if (!sentence) {
-
                 showError('Please enter a sentence to translate');
-
                 return;
-
             }
-
             
-
             if (Object.keys(translationsData).length === 0) {
-
                 showError('No translation dictionary loaded. Please ensure "translator.csv" is correctly formatted and accessible.');
-
                 return;
-
             }
-
             
-
             // Simple translation - look up each word
-
             const words = sentence.toLowerCase().split(/\s+/);
-
             const translatedWords = words.map(word => {
-
                 // Simple match
-
                 if (translationsData[word]) {
-
                     return translationsData[word];
-
                 }
-
                 
-
                 // Try removing common suffixes
-
                 const baseWord = word.replace(/('s|s|ing|ed|er|est)$/, '');
-
                 if (translationsData[baseWord]) {
-
                     return translationsData[baseWord];
-
                 }
-
                 
-
                 // Unknown word
-
                 return `[${word}]`;
-
             });
-
             
-
             const translation = translatedWords.join(' ');
-
             originalSentenceEl.textContent = sentence;
-
             translatedSentenceEl.textContent = translation;
-
             translationResult.classList.remove('hidden');
-
             
-
             // Store in memory
-
             translationMemory.push({
-
                 original: sentence,
-
                 translated: translation,
-
                 timestamp: new Date().toISOString()
-
             });
-
             updateHistoryDisplay(); // Update history after each translation
-
         }
-
 
         // Update translation history display
-
         function updateHistoryDisplay() {
-
             const historyList = document.getElementById('history-list');
-
             historyList.innerHTML = translationMemory.map(item => `
-
                 <div class="bg-white bg-opacity-50 p-3 rounded-md">
-
                     <div class="flex justify-between text-sm text-gray-500">
-
                         <span>${new Date(item.timestamp).toLocaleString()}</span>
-
                     </div>
-
                     <div class="mt-1 flex items-start gap-3">
-
                         <span class="language-badge bg-blue-100 text-blue-800">Original</span>
-
                         <p class="text-gray-700">${item.original}</p>
-
                     </div>
-
                     <div class="mt-1 flex items-start gap-3">
-
                         <span class="language-badge bg-purple-100 text-purple-800">Translated</span>
-
                         <p class="text-gray-700">${item.translated}</p>
-
                     </div>
-
                 </div>
-
             `).join('');
-
         }
-
 
         // Show error message
-
         function showError(message) {
-
             errorMessage.textContent = message;
-
             errorMessage.classList.remove('hidden');
-
         }
 
-
         // Initialize
-
         document.addEventListener('DOMContentLoaded', () => {
-
             // Check for saved theme preference or default to dark
-
             const savedTheme = localStorage.getItem('theme');
-
             if (savedTheme === 'light') {
-
                 document.body.classList.remove('dark-mode');
-
             } else {
-
                 document.body.classList.add('dark-mode'); // Default to dark
-
             }
-
             
-
             updateHistoryDisplay();
-
-            // Show loading and auto-load CSV
-
-            loadingIndicator.classList.remove('hidden');
-
-            loadCSV().finally(() => {
-
-                loadingIndicator.classList.add('hidden');
-
-            });
-
+            loadCSV(); // Auto-load CSV on page load
         });
-
 
         // Event listener for sentence input (Enter key)
-
         sentenceInput.addEventListener('keypress', function(e) {
-
             if (e.key === 'Enter') {
-
                 translateSentence();
-
             }
-
         });
-
     </script>
-
 </body>
-
 </html>
