@@ -5,8 +5,45 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Auto CSV Sentence Translator</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
     <style>
+        /* Base styles for the main content */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            position: relative; /* Needed for z-index context */
+            min-height: 100vh; /* Ensure body takes full height */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            overflow-x: hidden; /* Prevent horizontal scroll */
+        }
+
+        /* Particles.js container */
+        #particles-js {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: -1; /* Send to background */
+        }
+
+        /* Main content container to sit above particles */
+        .main-content-wrapper {
+            position: relative;
+            z-index: 1; /* Bring content to foreground */
+            max-width: 1200px; /* Match container width from particle.html */
+            width: 100%;
+            padding: 40px 20px; /* Match padding from particle.html */
+        }
+
+        /* Existing styles for the translator */
         .gradient-bg {
+            /* This will be overridden by dark/light mode, but keep as fallback */
             background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
         }
         .translation-card {
@@ -41,6 +78,7 @@
 
         /* Dark Mode Styles */
         body.dark-mode {
+            /* Background for dark mode, will be covered by particles but good to have */
             background: linear-gradient(135deg, #2d3748 0%, #1a202c 100%);
             color: #e2e8f0;
         }
@@ -74,8 +112,7 @@
             background-color: rgba(45, 55, 72, 0.5);
         }
         /* Input field specific dark mode styles */
-        body.dark-mode input[type="text"],
-        body.dark-mode input[type="file"] {
+        body.dark-mode input[type="text"] {
             background-color: #4a5568;
             color: #e2e8f0;
             border-color: #6b7280;
@@ -83,85 +120,79 @@
         body.dark-mode input::placeholder {
             color: #a0aec0;
         }
-        body.dark-mode .file\:bg-blue-50 {
-            background-color: #3b82f6; /* A darker blue for file input button */
-            color: #e2e8f0;
-        }
-        body.dark-mode .file\:text-blue-700 {
-            color: #e2e8f0;
-        }
-        body.dark-mode .hover\:file\:bg-blue-100:hover {
-            background-color: #2563eb; /* Darker hover state */
-        }
     </style>
 </head>
 <body class="gradient-bg min-h-screen p-4 md:p-8">
-    <div class="max-w-4xl mx-auto">
-        <div class="flex justify-between items-center mb-8">
-            <h1 class="text-3xl md:text-4xl font-bold text-gray-800">
-                Auto CSV Sentence Translator
-            </h1>
-            <!-- Dark/Light Mode Toggle Button -->
-            <button
-                id="theme-toggle"
-                class="bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 px-4 py-2 rounded-md transition-colors"
-                onclick="toggleTheme()"
-            >
-                Toggle Theme
-            </button>
-        </div>
-        <p class="text-gray-600 text-center mb-8">
-            Automatically translates sentences using a pre-loaded CSV dictionary.
-        </p>
+    <div id="particles-js"></div> <!-- Particles.js container -->
 
-        <div class="translation-card rounded-xl p-6 mb-8">
-            <div id="loading-indicator" class="hidden text-center py-4">
-                <div class="loader mx-auto"></div>
-                <p class="mt-2 text-gray-600">Loading and processing CSV file...</p>
-            </div>
-
-            <div id="error-message" class="hidden bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-4 rounded"></div>
-        </div>
-
-        <div class="translation-card rounded-xl p-6 mb-8">
-            <h2 class="text-xl font-semibold text-gray-800 mb-4">Translate a Sentence</h2>
-            <div class="flex flex-col md:flex-row gap-4 mb-4">
-                <div class="flex-1">
-                    <input
-                        type="text"
-                        id="sentence-input"
-                        placeholder="Enter sentence to translate..."
-                        class="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    />
-                </div>
+    <div class="main-content-wrapper"> <!-- Wrapper for existing content -->
+        <div class="max-w-4xl mx-auto">
+            <div class="flex justify-between items-center mb-8">
+                <h1 class="text-3xl md:text-4xl font-bold text-gray-800">
+                    Auto CSV Sentence Translator
+                </h1>
+                <!-- Dark/Light Mode Toggle Button -->
                 <button
-                    onclick="translateSentence()"
-                    class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-md transition-colors"
+                    id="theme-toggle"
+                    class="bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 px-4 py-2 rounded-md transition-colors"
+                    onclick="toggleTheme()"
                 >
-                    Translate
+                    Toggle Theme
                 </button>
             </div>
+            <p class="text-gray-600 text-center mb-8">
+                Automatically translates sentences using a pre-loaded CSV dictionary.
+            </p>
 
-            <div id="translation-result" class="hidden mt-6">
-                <h3 class="text-lg font-medium text-gray-800 mb-2">Translation Result</h3>
-                <div class="flex flex-col gap-3">
-                    <div class="flex items-start gap-3">
-                        <span class="language-badge bg-blue-100 text-blue-800">Original</span>
-                        <p id="original-sentence" class="text-gray-700"></p>
+            <div class="translation-card rounded-xl p-6 mb-8">
+                <div id="loading-indicator" class="hidden text-center py-4">
+                    <div class="loader mx-auto"></div>
+                    <p class="mt-2 text-gray-600">Loading and processing CSV file...</p>
+                </div>
+
+                <div id="error-message" class="hidden bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-4 rounded"></div>
+            </div>
+
+            <div class="translation-card rounded-xl p-6 mb-8">
+                <h2 class="text-xl font-semibold text-gray-800 mb-4">Translate a Sentence</h2>
+                <div class="flex flex-col md:flex-row gap-4 mb-4">
+                    <div class="flex-1">
+                        <input
+                            type="text"
+                            id="sentence-input"
+                            placeholder="Enter sentence to translate..."
+                            class="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        />
                     </div>
-                    <div class="flex items-start gap-3">
-                        <span class="language-badge bg-purple-100 text-purple-800">Translated</span>
-                        <p id="translated-sentence" class="text-gray-700"></p>
+                    <button
+                        onclick="translateSentence()"
+                        class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-md transition-colors"
+                    >
+                        Translate
+                    </button>
+                </div>
+
+                <div id="translation-result" class="hidden mt-6">
+                    <h3 class="lg:text-lg font-medium text-gray-800 mb-2">Translation Result</h3>
+                    <div class="flex flex-col gap-3">
+                        <div class="flex items-start gap-3">
+                            <span class="language-badge bg-blue-100 text-blue-800">Original</span>
+                            <p id="original-sentence" class="text-gray-700"></p>
+                        </div>
+                        <div class="flex items-start gap-3">
+                            <span class="language-badge bg-purple-100 text-purple-800">Translated</span>
+                            <p id="translated-sentence" class="text-gray-700"></p>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <!-- Add this new section for translation history -->
-        <div class="translation-card rounded-xl p-6 mb-8" id="translation-history">
-            <h2 class="text-xl font-semibold text-gray-800 mb-4">Translation History</h2>
-            <div id="history-list" class="space-y-2">
-                <!-- Will be populated by JS -->
+            <!-- Add this new section for translation history -->
+            <div class="translation-card rounded-xl p-6 mb-8" id="translation-history">
+                <h2 class="text-xl font-semibold text-gray-800 mb-4">Translation History</h2>
+                <div id="history-list" class="space-y-2">
+                    <!-- Will be populated by JS -->
+                </div>
             </div>
         </div>
     </div>
@@ -178,15 +209,139 @@
         const originalSentenceEl = document.getElementById('original-sentence');
         const translatedSentenceEl = document.getElementById('translated-sentence');
 
+        // Base Particles.js configuration (particle color and thickness are fixed)
+        const baseParticlesConfig = {
+            "particles": {
+                "number": {
+                    "value": 85,
+                    "density": {
+                        "enable": true,
+                        "value_area": 800
+                    }
+                },
+                "color": {
+                    "value": "#ff0000" // Fixed Red particles
+                },
+                "shape": {
+                    "type": "polygon",
+                    "stroke": {
+                        "width": 0,
+                        "color": "#ff0000"
+                    },
+                    "polygon": {
+                        "nb_sides": 7
+                    }
+                },
+                "opacity": {
+                    "value": 1,
+                    "random": true,
+                    "anim": {
+                        "enable": false, // Animation is disabled, so opacity_min directly controls the lower bound
+                        "speed": 1,
+                        "opacity_min": 0.75, // Set lower limit to 75%
+                        "sync": false
+                    }
+                },
+                "size": {
+                    "value": 3,
+                    "random": false,
+                    "anim": {
+                        "enable": false,
+                        "speed": 40,
+                        "size_min": 0.1,
+                        "sync": false
+                    }
+                },
+                "line_linked": {
+                    "enable": true,
+                    "distance": 150,
+                    // Line color will be set dynamically
+                    "opacity": 0.4,
+                    "width": 9 // Fixed Thick lines
+                },
+                "move": {
+                    "enable": true,
+                    "speed": 11.048241356724029,
+                    "direction": "none",
+                    "random": false,
+                    "straight": false,
+                    "out_mode": "bounce",
+                    "bounce": false,
+                    "attract": {
+                        "enable": false,
+                        "rotateX": 600,
+                        "rotateY": 1200
+                    }
+                }
+            },
+            "interactivity": {
+                "detect_on": "canvas",
+                "events": {
+                    "onhover": {
+                        "enable": true,
+                        "mode": "grab"
+                    },
+                    "onclick": {
+                        "enable": true,
+                        "mode": "push"
+                    },
+                    "resize": true
+                },
+                "modes": {
+                    "grab": {
+                        "distance": 95.89796456570207,
+                        "line_linked": {
+                            "opacity": 1
+                        }
+                    },
+                    "bubble": {
+                        "distance": 400,
+                        "size": 40,
+                        "duration": 2,
+                        "opacity": 8,
+                        "speed": 3
+                    },
+                    "repulse": {
+                        "distance": 200,
+                        "duration": 0.4
+                    },
+                    "push": {
+                        "particles_nb": 4
+                    },
+                    "remove": {
+                        "particles_nb": 2
+                    }
+                }
+            },
+            "retina_detect": false
+        };
+
+        // Function to initialize/re-initialize particles with dynamic line color
+        function initParticles(theme) {
+            // Create a deep copy of the base config to modify its line color
+            const currentParticlesConfig = JSON.parse(JSON.stringify(baseParticlesConfig));
+
+            if (theme === 'dark') {
+                currentParticlesConfig.particles.line_linked.color = "#ffffff"; // White lines for dark mode
+            } else {
+                currentParticlesConfig.particles.line_linked.color = "#000000"; // Black lines for light mode
+            }
+
+            if (window.pJSDom && window.pJSDom[0]) {
+                // Destroy existing particles instance if it exists
+                window.pJSDom[0].pJS.fn.vendors.destroypJS();
+                window.pJSDom = [];
+            }
+            particlesJS('particles-js', currentParticlesConfig);
+        }
+
         // Function to toggle dark/light theme
         function toggleTheme() {
             document.body.classList.toggle('dark-mode');
-            // Optionally, save user preference to localStorage
-            if (document.body.classList.contains('dark-mode')) {
-                localStorage.setItem('theme', 'dark');
-            } else {
-                localStorage.setItem('theme', 'light');
-            }
+            const isDarkMode = document.body.classList.contains('dark-mode');
+            const theme = isDarkMode ? 'dark' : 'light';
+            localStorage.setItem('theme', theme);
+            initParticles(theme); // Re-initialize particles with new line color
         }
 
         // Load CSV from URL (only auto-load from 'translator.csv')
@@ -319,12 +474,15 @@
         document.addEventListener('DOMContentLoaded', () => {
             // Check for saved theme preference or default to dark
             const savedTheme = localStorage.getItem('theme');
-            if (savedTheme === 'light') {
-                document.body.classList.remove('dark-mode');
+            const initialTheme = savedTheme === 'light' ? 'light' : 'dark'; // Default to dark
+            
+            if (initialTheme === 'dark') {
+                document.body.classList.add('dark-mode');
             } else {
-                document.body.classList.add('dark-mode'); // Default to dark
+                document.body.classList.remove('dark-mode');
             }
             
+            initParticles(initialTheme); // Initialize particles with the correct line color
             updateHistoryDisplay();
             loadCSV(); // Automatically load CSV on page load
         });
