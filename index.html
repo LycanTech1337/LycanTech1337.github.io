@@ -191,19 +191,27 @@
             loadingIndicator.classList.remove('hidden');
             
             try {
-                const response = await fetch('translator.csv');
+                // First try current directory
+                let response = await fetch('translator.csv');
                 if (!response.ok) {
-                    // Try alternative paths if first attempt fails
-                    const response = await fetch('./translator.csv');
+                    // Try with ./ prefix
+                    response = await fetch('./translator.csv');
                     if (!response.ok) {
-                        throw new Error("Failed to load translator.csv");
+                        throw new Error(`HTTP error! status: ${response.status}`);
                     }
                 }
                 
                 const csvText = await response.text();
+                if (!csvText) {
+                    throw new Error('CSV file is empty');
+                }
+                
                 processCSV(csvText);
+                console.log('Processed CSV with', Object.keys(translationsData).length, 'translations');
             } catch (error) {
                 showError(`Failed to load CSV: ${error.message}. Make sure translator.csv exists in this folder.`);
+                console.error('CSV load error:', error);
+                throw error; // Re-throw for debugging
             } finally {
                 loadingIndicator.classList.add('hidden');
             }
@@ -213,19 +221,25 @@
         function processCSV(csvText) {
             try {
                 // Parse CSV (assuming header row exists)
-                const lines = csvText.split('\n');
-                const headers = lines[0].split(',');
+                const lines = csvText.trim().split('\n');
+                if (lines.length < 2) {
+                    throw new Error('CSV must contain at least a header and one data row');
+                }
+                
+                const headers = lines[0].split(',').map(h => h.trim().toLowerCase());
                 
                 // Find index of relevant columns (source and target language)
-                const sourceIndex = headers.findIndex(h => h.toLowerCase().includes('english') || h.toLowerCase().includes('source'));
-                const targetIndex = headers.findIndex(h => h.toLowerCase().includes('lagu') || h.toLowerCase().includes('target'));
+                const sourceIndex = headers.findIndex(h => h.includes('english') || h.includes('source'));
+                const targetIndex = headers.findIndex(h => h.includes('lagu') || h.includes('target'));
                 
                 if (sourceIndex === -1 || targetIndex === -1) {
-                    throw new Error('Could not find required columns (English/Source and Lagu/Target) in translator.csv');
+                    throw new Error('CSV must contain "English/Source" and "Lagu/Target" columns');
                 }
                 
                 // Create translation dictionary
                 translationsData = {};
+                let processedCount = 0;
+                
                 for (let i = 1; i < lines.length; i++) {
                     if (!lines[i].trim()) continue;
                     
@@ -233,14 +247,21 @@
                     if (cells.length > Math.max(sourceIndex, targetIndex)) {
                         const source = cells[sourceIndex].trim().toLowerCase();
                         const target = cells[targetIndex].trim().toLowerCase();
-                        translationsData[source] = target;
+                        
+                        if (source && target) {
+                            translationsData[source] = target;
+                            processedCount++;
+                        }
                     }
                 }
                 
-                // No longer displaying CSV content, so no need for displayCSVContent or downloadBtn
+                if (processedCount === 0) {
+                    throw new Error('No valid translation pairs found in CSV');
+                }
                 
             } catch (error) {
                 showError(`Error processing CSV: ${error.message}`);
+                throw error;
             }
         }
 
@@ -316,17 +337,23 @@
         }
 
         // Initialize
-        document.addEventListener('DOMContentLoaded', () => {
+        document.addEventListener('DOMContentLoaded', async () => {
             // Check for saved theme preference or default to dark
             const savedTheme = localStorage.getItem('theme');
             if (savedTheme === 'light') {
                 document.body.classList.remove('dark-mode');
             } else {
-                document.body.classList.add('dark-mode'); // Default to dark
+                document.body.classList.add('dark-mode');
             }
             
             updateHistoryDisplay();
-            loadCSV(); // Auto-load CSV on page load
+            
+            try {
+                await loadCSV();
+                console.log('CSV loaded successfully', Object.keys(translationsData).length, 'entries');
+            } catch (error) {
+                console.error('CSV load failed:', error);
+            }
         });
 
         // Event listener for sentence input (Enter key)
