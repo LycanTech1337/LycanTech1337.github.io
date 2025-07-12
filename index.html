@@ -76,6 +76,87 @@
             font-weight: 500;
         }
 
+        /* Theme Toggle Styles */
+        .theme-toggle {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 30px;
+            margin-top: 4px; /* Add small margin to align with header */
+        }
+        .theme-toggle input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #2d3748;
+            transition: .4s;
+            border-radius: 34px;
+        }
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 22px;
+            width: 22px;
+            left: 4px;
+            top: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        input:checked + .toggle-slider {
+            background-color: #f5f7fa;
+        }
+        input:checked + .toggle-slider:before {
+            transform: translateX(30px);
+        }
+        .toggle-icons {
+            position: absolute;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            height: 100%;
+            padding: 0 8px;
+            pointer-events: none;
+            top: 0;
+        }
+        .toggle-icons svg {
+            width: 16px;
+            height: 16px;
+            color: white;
+            position: relative;
+            top: -1px; /* Fine-tune vertical alignment */
+            transition: opacity 0.2s ease-in-out;
+        }
+        input:checked ~ .toggle-icons .moon {
+            color: #2d3748;
+            opacity: 1;
+        }
+        input:checked ~ .toggle-icons .sun {
+            opacity: 0;
+        }
+        .toggle-icons .moon {
+            opacity: 0;
+        }
+        .toggle-icons .sun {
+            color: #f59e0b;
+            opacity: 1;
+        }
+        body.dark-mode .toggle-icons .moon {
+            opacity: 1;
+        }
+        body.dark-mode .toggle-icons .sun {
+            opacity: 0;
+        }
+
         /* Dark Mode Styles */
         body.dark-mode {
             /* Background for dark mode, will be covered by particles but good to have */
@@ -131,14 +212,19 @@
                 <h1 class="text-3xl md:text-4xl font-bold text-gray-800">
                     Lagu De Unn Translator
                 </h1>
-                <!-- Dark/Light Mode Toggle Button -->
-                <button
-                    id="theme-toggle"
-                    class="bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 px-4 py-2 rounded-md transition-colors"
-                    onclick="toggleTheme()"
-                >
-                    Toggle Theme
-                </button>
+                <!-- Dark/Light Mode Toggle Switch -->
+                <label class="theme-toggle">
+                    <input type="checkbox" id="theme-toggle" onclick="toggleTheme()">
+                    <span class="toggle-slider"></span>
+                    <div class="toggle-icons">
+                        <svg class="sun" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" clip-rule="evenodd" />
+                        </svg>
+                        <svg class="moon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                            <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" />
+                        </svg>
+                    </div>
+                </label>
             </div>
             <p class="text-gray-600 text-center mb-8">
                 Automatically translates sentences using a pre-loaded CSV dictionary.
@@ -337,9 +423,11 @@
 
         // Function to toggle dark/light theme
         function toggleTheme() {
+            const toggle = document.getElementById('theme-toggle');
             document.body.classList.toggle('dark-mode');
             const isDarkMode = document.body.classList.contains('dark-mode');
             const theme = isDarkMode ? 'dark' : 'light';
+            toggle.checked = isDarkMode;
             localStorage.setItem('theme', theme);
             initParticles(theme); // Re-initialize particles with new line color
         }
@@ -373,30 +461,56 @@
                 const lines = csvText.split('\n');
                 const headers = lines[0].split(',');
                 
-                // Find index of relevant columns (source and target language)
-                const sourceIndex = headers.findIndex(h => h.toLowerCase().includes('english') || h.toLowerCase().includes('source'));
-                const targetIndex = headers.findIndex(h => h.toLowerCase().includes('lagu') || h.toLowerCase().includes('target'));
+                // Find index of relevant columns (english, lagu, pos)
+                const englishIndex = headers.findIndex(h => h.toLowerCase().includes('english'));
+                const laguIndex = headers.findIndex(h => h.toLowerCase().includes('lagu'));
+                const posIndex = headers.findIndex(h => h.toLowerCase().includes('pos'));
                 
-                if (sourceIndex === -1 || targetIndex === -1) {
-                    throw new Error('Could not find required columns (English/Source and Lagu/Target)');
+                if (englishIndex === -1 || laguIndex === -1) {
+                    throw new Error('Could not find required columns (english and lagu)');
                 }
                 
-                // Create translation dictionary
+                // Create translation dictionary with pos information
                 translationsData = {};
                 for (let i = 1; i < lines.length; i++) {
                     if (!lines[i].trim()) continue;
                     
                     const cells = lines[i].split(',');
-                    if (cells.length > Math.max(sourceIndex, targetIndex)) {
-                        const source = cells[sourceIndex].trim().toLowerCase();
-                        const target = cells[targetIndex].trim().toLowerCase();
-                        translationsData[source] = target;
+                    if (cells.length > Math.max(englishIndex, laguIndex, posIndex)) {
+                        const englishWord = cells[englishIndex].trim().toLowerCase();
+                        const laguWord = cells[laguIndex].trim().toLowerCase();
+                        const pos = posIndex !== -1 ? cells[posIndex].trim().toLowerCase() : '';
+                        
+                        translationsData[englishWord] = {
+                            lagu: laguWord,
+                            pos: pos
+                        };
                     }
                 }
                 
             } catch (error) {
                 showError(`Error processing CSV: ${error.message}`);
             }
+        }
+
+        // Function to apply grammar rules (simplified for client-side)
+        function applyGrammarRules(word) {
+            // Plural rule: word ends with 's'
+            if (word.endsWith("s")) {
+                const singular = word.slice(0, -1);
+                if (translationsData[singular] && translationsData[singular].pos === 'noun') {
+                    return translationsData[singular].lagu + "+ar";
+                }
+            }
+            // Add other rules here if needed (e.g., -ed, -ing)
+            // For example:
+            // if (word.endsWith("ed")) {
+            //     const base = word.slice(0, -2);
+            //     if (translationsData[base] && translationsData[base].pos === 'verb') {
+            //         return translationsData[base].lagu + "+ta";
+            //     }
+            // }
+            return null; // No rule applied
         }
 
         // Translate sentence using loaded dictionary
@@ -415,18 +529,18 @@
             // Simple translation - look up each word
             const words = sentence.toLowerCase().split(/\s+/);
             const translatedWords = words.map(word => {
-                // Simple match
+                // 1. Direct match
                 if (translationsData[word]) {
-                    return translationsData[word];
+                    return translationsData[word].lagu;
                 }
                 
-                // Try removing common suffixes
-                const baseWord = word.replace(/('s|s|ing|ed|er|est)$/, '');
-                if (translationsData[baseWord]) {
-                    return translationsData[baseWord];
+                // 2. Apply grammar rules (e.g., plurals)
+                const grammarTranslation = applyGrammarRules(word);
+                if (grammarTranslation) {
+                    return grammarTranslation;
                 }
                 
-                // Unknown word
+                // 3. Unknown word
                 return `[${word}]`;
             });
             
@@ -478,8 +592,10 @@
             
             if (initialTheme === 'dark') {
                 document.body.classList.add('dark-mode');
+                document.getElementById('theme-toggle').checked = true;
             } else {
                 document.body.classList.remove('dark-mode');
+                document.getElementById('theme-toggle').checked = false;
             }
             
             initParticles(initialTheme); // Initialize particles with the correct line color
