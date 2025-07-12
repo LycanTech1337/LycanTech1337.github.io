@@ -227,7 +227,7 @@
                 </label>
             </div>
             <p class="text-gray-600 text-center mb-8">
-                Automatically translates sentences using a pre-loaded CSV dictionary.
+                Automatically translates between English and Lagu bidirectionally.
             </p>
 
             <div class="translation-card rounded-xl p-6 mb-8">
@@ -246,7 +246,7 @@
                         <input
                             type="text"
                             id="sentence-input"
-                            placeholder="Enter sentence to translate..."
+                            placeholder="Enter English or Lagu sentence..."
                             class="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                         />
                     </div>
@@ -513,7 +513,12 @@
             return null; // No rule applied
         }
 
-        // Translate sentence using loaded dictionary
+        // Check if word is in Lagu
+        function isLaguWord(word) {
+            return Object.values(translationsData).some(entry => entry.lagu === word.toLowerCase());
+        }
+
+        // Translate sentence bidirectionally
         function translateSentence() {
             const sentence = sentenceInput.value.trim();
             if (!sentence) {
@@ -526,27 +531,56 @@
                 return;
             }
             
-            // Simple translation - look up each word
             const words = sentence.toLowerCase().split(/\s+/);
-            const translatedWords = words.map(word => {
-                // 1. Direct match
-                if (translationsData[word]) {
-                    return translationsData[word].lagu;
-                }
-                
-                // 2. Apply grammar rules (e.g., plurals)
-                const grammarTranslation = applyGrammarRules(word);
-                if (grammarTranslation) {
-                    return grammarTranslation;
-                }
-                
-                // 3. Unknown word
-                return `[${word}]`;
-            });
+            let translation;
             
-            const translation = translatedWords.join(' ');
-            originalSentenceEl.textContent = sentence;
-            translatedSentenceEl.textContent = translation;
+            // Check if any word matches lagu vocabulary first
+            const hasLaguWords = words.some(word => isLaguWord(word) || word.endsWith('+ar'));
+            
+            if (hasLaguWords) {
+                // Translate from Lagu to English
+                translation = words.map(word => {
+                    // Handle plurals
+                    if (word.endsWith('+ar')) {
+                        const baseWord = word.replace('+ar', '');
+                        const englishWord = Object.keys(translationsData).find(
+                            key => translationsData[key].lagu === baseWord
+                        );
+                        return englishWord ? `${englishWord}s` : `[${word}]`;
+                    }
+                    
+                    // Find direct match
+                    const englishWord = Object.keys(translationsData).find(
+                        key => translationsData[key].lagu === word
+                    ) || `[${word}]`;
+                    
+                    return englishWord;
+                }).join(' ');
+                
+                originalSentenceEl.textContent = sentence;
+                translatedSentenceEl.textContent = translation;
+            } else {
+                // Translate from English to Lagu
+                const translatedWords = words.map(word => {
+                    // 1. Direct match
+                    if (translationsData[word]) {
+                        return translationsData[word].lagu;
+                    }
+                    
+                    // 2. Apply grammar rules (e.g., plurals)
+                    const grammarTranslation = applyGrammarRules(word);
+                    if (grammarTranslation) {
+                        return grammarTranslation;
+                    }
+                    
+                    // 3. Unknown word
+                    return `[${word}]`;
+                });
+                
+                translation = translatedWords.join(' ');
+                originalSentenceEl.textContent = sentence;
+                translatedSentenceEl.textContent = translation;
+            }
             translationResult.classList.remove('hidden');
             
             // Store in memory
